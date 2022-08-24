@@ -1,6 +1,55 @@
 # Android 水印相机
 **贴图控件：** [EasyPhotos](https://github.com/HuanTanSheng/EasyPhotos "EasyPhotos")
 
+**SurfaceView截图**:
+```java
+  public void screenshot(SurfaceView view){
+
+        //需要截取的长和宽
+        int outWidth = view.getWidth();
+        int outHeight = view.getHeight();
+
+        mScreenBitmap = Bitmap.createBitmap(outWidth, outHeight,Bitmap.Config.ARGB_8888);
+        PixelCopy.request(view, mScreenBitmap, new PixelCopy.OnPixelCopyFinishedListener() {
+            @Override
+            public void onPixelCopyFinished(int copyResult){
+                if (PixelCopy.SUCCESS == copyResult) {
+
+                    Log.i("gyx","SUCCESS ");
+
+                    Bitmap bitmap1 = stickerModel.saveBitMap(WaterCameraActivity.this, mRootView);
+
+                    Bitmap saveBitmap = toConformBitmap(mScreenBitmap, bitmap1);
+
+
+                    EasyPhotos.saveBitmapToDir(WaterCameraActivity.this, saveBitmap, new SaveBitmapCallBack() {
+                        @Override
+                        public void onSuccess(String path) {
+
+                            Toast.makeText(WaterCameraActivity.this, "保存成功！", Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void onFailed(Exception exception) {
+
+                            Toast.makeText(WaterCameraActivity.this, "保存失败！", Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void onCreateDirFailed() {
+
+                        }
+                    });
+                } else {
+                    Log.i("gyx","FAILED");
+                    // onErrorCallback()
+                }
+            }
+        }, new Handler());
+    }
+
+
+```
 
 **位图合并**：
 ```java
